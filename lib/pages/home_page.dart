@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.grey.shade50,
         elevation: 0,
         title: const Text(
-          'Home',
+          'Infrastructure Market',
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                       focusNode: _focusNode,
                       onChanged: _handleSearchChanged,
                       decoration: const InputDecoration(
-                        hintText: 'Search by Issuer Name or ISIN',
+                        hintText: 'Search companies or ISIN',
                         prefixIcon: Icon(
                           Icons.search,
                           color: Colors.black,
@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                     MaterialPageRoute(
                                       builder: (context) => BlocProvider(
                                         create: (context) =>
-                                            CompanyDetailBloc(),
+                                            getIt<CompanyDetailBloc>(),
                                         child: const CompanyDetailPage(),
                                       ),
                                     ),
@@ -251,12 +251,9 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.red,
                         ),
                         const SizedBox(height: 16),
-                        Text(
-                          'Error: $message',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.red,
-                          ),
+                        const Text(
+                          'Error loading companies',
+                          style: TextStyle(fontSize: 16, color: Colors.red),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),

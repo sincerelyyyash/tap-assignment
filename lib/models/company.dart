@@ -9,19 +9,12 @@ class Company with _$Company {
     required String logo,
     required String isin,
     required String rating,
-    required String companyName,
+    @JsonKey(name: 'company_name') required String companyName,
     required List<String> tags,
   }) = _Company;
 
-  factory Company.fromJson(Map<String, dynamic> json) {
-    return Company(
-      logo: json['logo'] as String,
-      isin: json['isin'] as String,
-      rating: json['rating'] as String,
-      companyName: json['company_name'] as String,
-      tags: List<String>.from(json['tags'] as List),
-    );
-  }
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      _$CompanyFromJson(json);
 }
 
 @freezed

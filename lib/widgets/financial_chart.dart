@@ -25,13 +25,16 @@ class _FinancialChartState extends State<FinancialChart> {
       return const SizedBox.shrink();
     }
 
-    // Find the maximum value for scaling
+    // Find the maximum value for scaling, ensuring it's positive
     final maxValue = currentData
-        .map((e) => e.value)
+        .map((e) => e.value.abs()) // Use absolute values for scaling
         .reduce((a, b) => a > b ? a : b);
 
+    // Ensure maxValue is at least 1 to prevent division by zero
+    final safeMaxValue = maxValue > 0 ? maxValue : 1;
+
     // Calculate dynamic Y-axis labels
-    final yAxisLabels = _generateYAxisLabels(maxValue);
+    final yAxisLabels = _generateYAxisLabels(safeMaxValue);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -198,50 +201,63 @@ class _FinancialChartState extends State<FinancialChart> {
                             }).toList(),
 
                             // Bars row with tap tracking
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: currentData.asMap().entries.map((
-                                entry,
-                              ) {
-                                final idx = entry.key;
-                                final data = entry.value;
-                                final chartHeight = 120.0;
-                                final normalizedHeight =
-                                    (data.value / maxValue) * chartHeight;
-                                final isSelected = _selectedIndex == idx;
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minWidth:
+                                      MediaQuery.of(context).size.width - 160,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: currentData.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    final idx = entry.key;
+                                    final data = entry.value;
+                                    final chartHeight = 120.0;
+                                    final normalizedHeight =
+                                        ((data.value.abs() / safeMaxValue) *
+                                                chartHeight)
+                                            .clamp(1.0, chartHeight);
+                                    final isSelected = _selectedIndex == idx;
 
-                                return GestureDetector(
-                                  onTap: () => setState(() {
-                                    _selectedData = data;
-                                    _selectedIndex = idx;
-                                  }),
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 2,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        // Bar
-                                        Container(
-                                          width: 16,
-                                          height: normalizedHeight,
-                                          decoration: BoxDecoration(
-                                            color: isEbitdaSelected
-                                                ? Colors.black87
-                                                : const Color(0xFF2563EB),
-                                            borderRadius:
-                                                const BorderRadius.vertical(
-                                                  top: Radius.circular(2),
-                                                ),
-                                          ),
+                                    return GestureDetector(
+                                      onTap: () => setState(() {
+                                        _selectedData = data;
+                                        _selectedIndex = idx;
+                                      }),
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 2,
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            // Bar
+                                            Container(
+                                              width: 16,
+                                              height: normalizedHeight,
+                                              decoration: BoxDecoration(
+                                                color: isEbitdaSelected
+                                                    ? Colors.black87
+                                                    : const Color(0xFF2563EB),
+                                                borderRadius:
+                                                    const BorderRadius.vertical(
+                                                      top: Radius.circular(2),
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                             ),
 
                             // Vertical dotted line indicator when bar is selected
@@ -333,19 +349,27 @@ class _FinancialChartState extends State<FinancialChart> {
                       const SizedBox(height: 8),
 
                       // Month labels row, aligned under bars
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: currentData
-                            .map(
-                              (data) => Text(
-                                data.month.substring(0, 1).toUpperCase(),
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            )
-                            .toList(),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: MediaQuery.of(context).size.width - 160,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: currentData
+                                .map(
+                                  (data) => Text(
+                                    data.month.substring(0, 1).toUpperCase(),
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
                       ),
                     ],
                   ),

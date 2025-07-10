@@ -39,9 +39,7 @@ class HighlightedText extends StatelessWidget {
       return Text(text, style: style);
     }
 
-    final spans = <InlineSpan>[];
-
-    // Create a simpler approach: find all matches first, then build spans
+    // Find all matches
     final matches = <Map<String, int>>[];
 
     for (final term in searchTerms) {
@@ -72,11 +70,18 @@ class HighlightedText extends StatelessWidget {
       }
     }
 
+    // If no actual matches found, return simple Text widget
+    if (matches.isEmpty) {
+      return Text(text, style: style);
+    }
+
     // Sort matches by start position
     matches.sort((a, b) => a['start']!.compareTo(b['start']!));
 
-    // Build spans
+    // Build TextSpans
+    final spans = <TextSpan>[];
     int currentIndex = 0;
+
     for (final match in matches) {
       final start = match['start']!;
       final end = match['end']!;
@@ -88,27 +93,17 @@ class HighlightedText extends StatelessWidget {
         );
       }
 
-      // Add highlighted match with padding
+      // Add highlighted match
       spans.add(
-        WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: Container(
-            decoration: BoxDecoration(
-              color: highlightStyle?.backgroundColor ?? const Color(0x29D97706),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            child: Text(
-              text.substring(start, end),
-              style:
-                  (highlightStyle ??
-                          const TextStyle(
-                            color: Color(0xFFD97706),
-                            fontWeight: FontWeight.bold,
-                          ))
-                      .copyWith(backgroundColor: Colors.transparent),
-            ),
-          ),
+        TextSpan(
+          text: text.substring(start, end),
+          style:
+              highlightStyle ??
+              const TextStyle(
+                color: Color(0xFFD97706),
+                fontWeight: FontWeight.bold,
+                backgroundColor: Color(0x29D97706),
+              ),
         ),
       );
 

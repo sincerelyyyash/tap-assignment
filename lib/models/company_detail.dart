@@ -1,4 +1,6 @@
-class CompanyDetail {
+import 'package:equatable/equatable.dart';
+
+class CompanyDetail extends Equatable {
   final String logo;
   final String companyName;
   final String description;
@@ -8,7 +10,7 @@ class CompanyDetail {
   final Financials financials;
   final IssuerDetails issuerDetails;
 
-  CompanyDetail({
+  const CompanyDetail({
     required this.logo,
     required this.companyName,
     required this.description,
@@ -18,6 +20,18 @@ class CompanyDetail {
     required this.financials,
     required this.issuerDetails,
   });
+
+  @override
+  List<Object?> get props => [
+    logo,
+    companyName,
+    description,
+    isin,
+    status,
+    prosAndCons,
+    financials,
+    issuerDetails,
+  ];
 
   factory CompanyDetail.fromJson(Map<String, dynamic> json) {
     return CompanyDetail(
@@ -33,11 +47,14 @@ class CompanyDetail {
   }
 }
 
-class ProsAndCons {
+class ProsAndCons extends Equatable {
   final List<String> pros;
   final List<String> cons;
 
-  ProsAndCons({required this.pros, required this.cons});
+  const ProsAndCons({required this.pros, required this.cons});
+
+  @override
+  List<Object?> get props => [pros, cons];
 
   factory ProsAndCons.fromJson(Map<String, dynamic> json) {
     return ProsAndCons(
@@ -47,11 +64,14 @@ class ProsAndCons {
   }
 }
 
-class Financials {
+class Financials extends Equatable {
   final List<FinancialData> ebitda;
   final List<FinancialData> revenue;
 
-  Financials({required this.ebitda, required this.revenue});
+  const Financials({required this.ebitda, required this.revenue});
+
+  @override
+  List<Object?> get props => [ebitda, revenue];
 
   factory Financials.fromJson(Map<String, dynamic> json) {
     return Financials(
@@ -69,18 +89,21 @@ class Financials {
   }
 }
 
-class FinancialData {
+class FinancialData extends Equatable {
   final String month;
   final int value;
 
-  FinancialData({required this.month, required this.value});
+  const FinancialData({required this.month, required this.value});
+
+  @override
+  List<Object?> get props => [month, value];
 
   factory FinancialData.fromJson(Map<String, dynamic> json) {
     return FinancialData(month: json['month'] ?? '', value: json['value'] ?? 0);
   }
 }
 
-class IssuerDetails {
+class IssuerDetails extends Equatable {
   final String issuerName;
   final String typeOfIssuer;
   final String sector;
@@ -91,7 +114,7 @@ class IssuerDetails {
   final String registrar;
   final String debentureTrustee;
 
-  IssuerDetails({
+  const IssuerDetails({
     required this.issuerName,
     required this.typeOfIssuer,
     required this.sector,
@@ -102,6 +125,19 @@ class IssuerDetails {
     required this.registrar,
     required this.debentureTrustee,
   });
+
+  @override
+  List<Object?> get props => [
+    issuerName,
+    typeOfIssuer,
+    sector,
+    industry,
+    issuerNature,
+    cin,
+    leadManager,
+    registrar,
+    debentureTrustee,
+  ];
 
   factory IssuerDetails.fromJson(Map<String, dynamic> json) {
     return IssuerDetails(

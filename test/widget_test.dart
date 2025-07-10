@@ -36,8 +36,11 @@ void main() {
   testWidgets('Company search app smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
-    expect(find.text('Home'), findsOneWidget);
-    expect(find.text('Search by Issuer Name or ISIN'), findsOneWidget);
+
+    // Check for app title in AppBar
+    expect(find.text('Infrastructure Market'), findsOneWidget);
+    // Check for search field placeholder
+    expect(find.text('Search companies or ISIN'), findsOneWidget);
   });
 
   testWidgets('Search functionality test', (WidgetTester tester) async {
