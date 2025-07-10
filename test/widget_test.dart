@@ -1,30 +1,64 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:tap_assignment/main.dart';
+import 'package:tap_assignment/blocs/company_search/company_search_bloc.dart';
+import 'package:tap_assignment/repositories/company_repository.dart';
+import 'package:tap_assignment/models/company.dart';
+
+class MockCompanyRepository implements CompanyRepository {
+  @override
+  Future<List<Company>> getCompanies() async {
+    return [
+      const Company(
+        logo: 'https://example.com/logo.png',
+        isin: 'INE06E501754',
+        rating: 'AAA',
+        companyName: 'Test Company Limited',
+        tags: ['Test'],
+      ),
+    ];
+  }
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  setUp(() {
+    GetIt.instance.reset();
+    GetIt.instance.registerLazySingleton<CompanyRepository>(
+      () => MockCompanyRepository(),
+    );
+    GetIt.instance.registerFactory<CompanySearchBloc>(
+      () => CompanySearchBloc(GetIt.instance<CompanyRepository>()),
+    );
+  });
+
+  testWidgets('Company search app smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Search by Issuer Name or ISIN'), findsOneWidget);
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Search functionality test', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    final searchField = find.byType(TextField);
+    expect(searchField, findsOneWidget);
+    await tester.enterText(searchField, 'Test');
+    await tester.pumpAndSettle();
+    expect(find.text('SEARCH RESULTS'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Multi-term search functionality test', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    final searchField = find.byType(TextField);
+    expect(searchField, findsOneWidget);
+    await tester.enterText(searchField, 'Test 1754');
+    await tester.pumpAndSettle();
+    expect(find.text('SEARCH RESULTS'), findsOneWidget);
   });
 }
