@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: _focusNode.hasFocus
-                            ? Colors.blue
+                            ? const Color(0xFF2563EB) // #2563EB
                             : Colors.transparent,
                         width: 1,
                       ),

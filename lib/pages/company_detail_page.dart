@@ -106,7 +106,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Colors.orange.shade100,
+                        color: const Color(0xFFE3F2FD), // Light royal blue
                       ),
                       child: companyDetail.logo.isNotEmpty
                           ? ClipRRect(
@@ -161,16 +161,16 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
+                        color: const Color(0xFFE3F2FD), // Light blue background
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.blue.shade200),
+                        // Removed border
                       ),
                       child: Text(
                         'ISIN: ${companyDetail.isin}',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blue.shade700,
+                          color: const Color(0xFF2563EB), // #2563EB
                         ),
                       ),
                     ),
@@ -181,16 +181,24 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
+                        color: companyDetail.status.toLowerCase() == 'active'
+                            ? Colors.green.shade50
+                            : const Color(
+                                0xFFE3F2FD,
+                              ), // Light blue background for non-active
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.green.shade200),
+                        // Removed border
                       ),
                       child: Text(
                         companyDetail.status,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.green.shade700,
+                          color: companyDetail.status.toLowerCase() == 'active'
+                              ? Colors.green.shade700
+                              : const Color(
+                                  0xFF2563EB,
+                                ), // Green text for active, blue for others
                         ),
                       ),
                     ),
@@ -204,9 +212,9 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                   controller: _tabController,
                   tabAlignment: TabAlignment.start,
                   isScrollable: true,
-                  labelColor: Colors.blue.shade600,
+                  labelColor: const Color(0xFF2563EB), // #2563EB
                   unselectedLabelColor: Colors.grey.shade600,
-                  indicatorColor: Colors.blue.shade600,
+                  indicatorColor: const Color(0xFF2563EB), // #2563EB
                   indicatorWeight: 2,
                   labelStyle: const TextStyle(
                     fontSize: 14,
@@ -249,7 +257,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
       height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.orange.shade200,
+        color: Colors.orange.shade100,
       ),
       child: Center(
         child: Text(
@@ -369,7 +377,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.orange.shade700,
+                        color: Colors.orange.shade800,
                       ),
                     ),
 
@@ -381,10 +389,18 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.error_outline,
-                              color: Colors.orange.shade600,
-                              size: 16,
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                color: Colors.orange.shade50,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.priority_high,
+                                color: Colors.orange.shade800,
+                                size: 16,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -419,18 +435,15 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
       shadowColor: Colors.black.withOpacity(0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with padding
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                Icon(
-                  Icons.person_outline,
-                  size: 20,
-                  color: Colors.blue.shade600,
-                ),
+                Icon(Icons.contacts_outlined, size: 20, color: Colors.black87),
                 const SizedBox(width: 8),
                 const Text(
                   'Issuer Details',
@@ -442,32 +455,48 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
                 ),
               ],
             ),
+          ),
 
-            const SizedBox(height: 16),
-            Divider(height: 1, color: Colors.grey.shade200),
-            const SizedBox(height: 8),
+          // Full-width divider
+          Divider(height: 1, color: Colors.grey.shade200),
 
-            _buildDetailRow('Issuer Name', issuerDetails.issuerName),
-            _buildDetailRow('Type of Issuer', issuerDetails.typeOfIssuer),
-            _buildDetailRow('Sector', issuerDetails.sector),
-            _buildDetailRow('Industry', issuerDetails.industry),
-            _buildDetailRow('Issuer nature', issuerDetails.issuerNature),
-            _buildDetailRow(
-              'Corporate Identity Number (CIN)',
-              issuerDetails.cin,
+          // Details with padding
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildDetailRow('Issuer Name', issuerDetails.issuerName),
+                const SizedBox(height: 6),
+                _buildDetailRow('Type of Issuer', issuerDetails.typeOfIssuer),
+                const SizedBox(height: 6),
+                _buildDetailRow('Sector', issuerDetails.sector),
+                const SizedBox(height: 6),
+                _buildDetailRow('Industry', issuerDetails.industry),
+                const SizedBox(height: 6),
+                _buildDetailRow('Issuer nature', issuerDetails.issuerNature),
+                const SizedBox(height: 6),
+                _buildDetailRow(
+                  'Corporate Identity Number (CIN)',
+                  issuerDetails.cin,
+                ),
+                const SizedBox(height: 6),
+                _buildDetailRow(
+                  'Name of the Lead Manager',
+                  issuerDetails.leadManager,
+                ),
+                const SizedBox(height: 6),
+                _buildDetailRow('Registrar', issuerDetails.registrar),
+                const SizedBox(height: 6),
+                _buildDetailRow(
+                  'Name of Debenture Trustee',
+                  issuerDetails.debentureTrustee,
+                  isLast: true,
+                ),
+              ],
             ),
-            _buildDetailRow(
-              'Name of the Lead Manager',
-              issuerDetails.leadManager,
-            ),
-            _buildDetailRow('Registrar', issuerDetails.registrar),
-            _buildDetailRow(
-              'Name of Debenture Trustee',
-              issuerDetails.debentureTrustee,
-              isLast: true,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -480,7 +509,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage>
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.blue.shade600,
+            color: const Color(0xFF2563EB), // #2563EB
             fontWeight: FontWeight.w500,
           ),
         ),
