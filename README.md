@@ -28,8 +28,8 @@ A modern Flutter application for browsing and searching infrastructure market co
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd tap_assignment
+   git clone https://github.com/sincerelyyyash/tap-assignment.git
+   cd tap-assignment
    ```
 
 2. **Install dependencies**
