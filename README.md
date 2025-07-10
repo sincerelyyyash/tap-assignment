@@ -350,19 +350,5 @@ flutter run --debug
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
-
-- **Development**: Flutter Team
-- **Design**: UI/UX Team
-- **Testing**: QA Team
-- **DevOps**: Infrastructure Team
-
-## 📞 Support
-
-For support and questions:
-
-- **Email**: support@tapinvest.com
-- **Documentation**: [Project Wiki](wiki-url)
-- **Issues**: [GitHub Issues](issues-url)
 
 ---
