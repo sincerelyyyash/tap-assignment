@@ -5,7 +5,10 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 import '../blocs/company_search/company_search_bloc.dart';
 import '../blocs/company_search/company_search_event.dart';
 import '../blocs/company_search/company_search_state.dart';
+import '../blocs/company_detail/company_detail_bloc.dart';
+import '../core/injection.dart';
 import '../widgets/company_card.dart';
+import 'company_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -220,7 +223,16 @@ class _HomePageState extends State<HomePage> {
                                 showDivider: showDivider,
                                 onTap: () {
                                   // Handle company card tap
-                                  // You can navigate to company details page here
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) =>
+                                            CompanyDetailBloc(),
+                                        child: const CompanyDetailPage(),
+                                      ),
+                                    ),
+                                  );
                                 },
                               );
                             }).toList(),
